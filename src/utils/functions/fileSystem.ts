@@ -1,6 +1,7 @@
 import * as fs from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import type { FileWithURL } from "../hooks/bucket";
+import { showToast } from "./toast";
 
 export async function downloadPicture(file: FileWithURL) {
   try {
@@ -11,6 +12,7 @@ export async function downloadPicture(file: FileWithURL) {
     const { uri } = download;
     await saveFile(uri);
 
+    showToast('Picture has been downloaded')
     return download;
   } catch (error) {
     console.error("There was an error downloading the picture: ", error);
@@ -19,7 +21,7 @@ export async function downloadPicture(file: FileWithURL) {
 
 export async function saveFile(fileUri: string) {
   try {
-    const result = await MediaLibrary.requestPermissionsAsync();
+    const result = await MediaLibrary.requestPermissionsAsync(true);
 
     if (result.granted) {
       const asset = await MediaLibrary.createAssetAsync(fileUri);
