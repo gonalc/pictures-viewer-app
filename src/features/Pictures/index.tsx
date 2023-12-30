@@ -22,8 +22,6 @@ const Pictures = () => {
   };
 
   const openPictureMenu = (file: FileWithURL) => {
-    console.log(JSON.stringify(file, null, 2));
-
     Alert.alert(file.name, "¿Qué quieres hacer con esta foto?", [
       { text: "Descargar", onPress: () => null },
       { text: "Borrar", onPress: () => onDelete(file) },
