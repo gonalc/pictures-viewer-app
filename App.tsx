@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import Login from "./src/features/Login";
 import useSession from "./src/utils/hooks/session";
 import Pictures from "./src/features/Pictures";
@@ -10,10 +10,10 @@ export default function App() {
   const Screen = session ? Pictures : Login;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
       <Screen />
-    </View>
+    </SafeAreaView>
   );
 }
 

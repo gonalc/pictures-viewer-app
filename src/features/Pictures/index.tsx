@@ -1,4 +1,11 @@
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import useBucket from "../../utils/hooks/bucket";
 import Logout from "../Logout";
 
@@ -6,8 +13,10 @@ const Pictures = () => {
   const files = useBucket();
 
   return (
-    <View style={styles.container}>
-      <Text>Holaaa pictures</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Fotillos</Text>
+      </View>
 
       <View style={styles.picturesContainer}>
         <FlatList
@@ -16,11 +25,11 @@ const Pictures = () => {
             const { name, url } = item;
 
             return (
-              <View>
+              <View style={styles.pictureContainer}>
                 <Text>{name}</Text>
                 <Image
                   source={{ uri: url }}
-                  style={{ height: 200, width: 350 }}
+                  style={{ height: 200, width: 350, borderRadius: 5 }}
                 />
               </View>
             );
@@ -32,7 +41,7 @@ const Pictures = () => {
       <View style={styles.logoutContainer}>
         <Logout />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -41,13 +50,25 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+  titleContainer: {
+    padding: 10,
+    marginTop: 20
+  },
+  title: {
+    fontSize: 20,
+    textAlign: 'center'
+  },
   picturesContainer: {
-    paddingVertical: 10
+    paddingVertical: 10,
+    flex: 1,
   },
   logoutContainer: {
     justifyContent: "center",
     alignItems: "center",
   },
+  pictureContainer: {
+    marginVertical: 10
+  }
 });
 
 export default Pictures;
