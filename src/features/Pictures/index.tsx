@@ -29,7 +29,7 @@ const Pictures = () => {
                 <Text>{name}</Text>
                 <Image
                   source={{ uri: url }}
-                  style={{ height: 200, width: 350, borderRadius: 5 }}
+                  style={styles.image}
                 />
               </View>
             );
@@ -68,6 +68,11 @@ const styles = StyleSheet.create({
   },
   pictureContainer: {
     marginVertical: 10
+  },
+  image: {
+    height: 200,
+    width: 350,
+    borderRadius: 5
   }
 });
 
