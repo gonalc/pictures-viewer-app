@@ -1,16 +1,27 @@
 import {
+    Alert,
   FlatList,
   Image,
   SafeAreaView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
-import useBucket from "../../utils/hooks/bucket";
+import useBucket, { FileWithURL } from "../../utils/hooks/bucket";
 import Logout from "../Logout";
 
 const Pictures = () => {
   const files = useBucket();
+
+  const openPictureMenu = (file: FileWithURL) => {
+    console.log(JSON.stringify(file, null, 2))
+
+    Alert.alert(file.name, '¿Qué quieres hacer con esta foto?', [
+        { text: 'Descargar', onPress: () => null },
+        { text: 'Borrar', onPress: () => null }
+    ])
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -25,13 +36,13 @@ const Pictures = () => {
             const { name, url } = item;
 
             return (
-              <View style={styles.pictureContainer}>
+              <TouchableOpacity style={styles.pictureContainer} onLongPress={() => openPictureMenu(item)}>
                 <Text>{name}</Text>
                 <Image
                   source={{ uri: url }}
                   style={styles.image}
                 />
-              </View>
+              </TouchableOpacity>
             );
           }}
           keyExtractor={(item) => item.id}

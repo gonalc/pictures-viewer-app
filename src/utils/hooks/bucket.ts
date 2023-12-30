@@ -4,7 +4,7 @@ import type { FileObject } from "@supabase/storage-js/src/lib/types";
 
 type BucketName = "pictures";
 
-type FileWithURL = FileObject & {
+export type FileWithURL = FileObject & {
   url: string;
 };
 
