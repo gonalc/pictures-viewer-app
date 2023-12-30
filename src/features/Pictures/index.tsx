@@ -1,5 +1,5 @@
 import {
-    Alert,
+  Alert,
   FlatList,
   Image,
   SafeAreaView,
@@ -8,51 +8,60 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import useBucket, { FileWithURL } from "../../utils/hooks/bucket";
+import useBucket, { type FileWithURL } from "../../utils/hooks/bucket";
 import Logout from "../Logout";
+import { deleteImage } from "../../utils/functions/storage";
+import Loader from "../../components/Loader";
 
 const Pictures = () => {
-  const files = useBucket();
+  const { files, loading, fetchImages } = useBucket();
+
+  const onDelete = async (file: FileWithURL) => {
+    await deleteImage(file);
+    await fetchImages();
+  };
 
   const openPictureMenu = (file: FileWithURL) => {
-    console.log(JSON.stringify(file, null, 2))
+    console.log(JSON.stringify(file, null, 2));
 
-    Alert.alert(file.name, '¿Qué quieres hacer con esta foto?', [
-        { text: 'Descargar', onPress: () => null },
-        { text: 'Borrar', onPress: () => null }
-    ])
-  }
+    Alert.alert(file.name, "¿Qué quieres hacer con esta foto?", [
+      { text: "Descargar", onPress: () => null },
+      { text: "Borrar", onPress: () => onDelete(file) },
+    ]);
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Fotillos</Text>
-      </View>
+    <Loader isLoading={loading}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Fotillos</Text>
+        </View>
 
-      <View style={styles.picturesContainer}>
-        <FlatList
-          data={files}
-          renderItem={({ item }) => {
-            const { name, url } = item;
+        <View style={styles.picturesContainer}>
+          <FlatList
+            data={files}
+            renderItem={({ item }) => {
+              const { name, url } = item;
 
-            return (
-              <TouchableOpacity style={styles.pictureContainer} onLongPress={() => openPictureMenu(item)}>
-                <Text>{name}</Text>
-                <Image
-                  source={{ uri: url }}
-                  style={styles.image}
-                />
-              </TouchableOpacity>
-            );
-          }}
-          keyExtractor={(item) => item.id}
-        />
-      </View>
+              return (
+                <TouchableOpacity
+                  style={styles.pictureContainer}
+                  onLongPress={() => openPictureMenu(item)}
+                >
+                  <Text>{name}</Text>
+                  <Image source={{ uri: url }} style={styles.image} />
+                </TouchableOpacity>
+              );
+            }}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
 
-      <View style={styles.logoutContainer}>
-        <Logout />
-      </View>
-    </SafeAreaView>
+        <View style={styles.logoutContainer}>
+          <Logout />
+        </View>
+      </SafeAreaView>
+    </Loader>
   );
 };
 
@@ -63,11 +72,11 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     padding: 10,
-    marginTop: 20
+    marginTop: 20,
   },
   title: {
     fontSize: 20,
-    textAlign: 'center'
+    textAlign: "center",
   },
   picturesContainer: {
     paddingVertical: 10,
@@ -78,13 +87,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   pictureContainer: {
-    marginVertical: 10
+    marginVertical: 10,
   },
   image: {
     height: 200,
     width: 350,
-    borderRadius: 5
-  }
+    borderRadius: 5,
+  },
 });
 
 export default Pictures;
