@@ -12,6 +12,7 @@ import useBucket, { type FileWithURL } from "../../utils/hooks/bucket";
 import Logout from "../Logout";
 import { deleteImage } from "../../utils/functions/storage";
 import Loader from "../../components/Loader";
+import { downloadPicture } from "../../utils/functions/fileSystem";
 
 const Pictures = () => {
   const { files, loading, fetchImages } = useBucket();
@@ -23,7 +24,7 @@ const Pictures = () => {
 
   const openPictureMenu = (file: FileWithURL) => {
     Alert.alert(file.name, "¿Qué quieres hacer con esta foto?", [
-      { text: "Descargar", onPress: () => null },
+      { text: "Descargar", onPress: () => downloadPicture(file) },
       { text: "Borrar", onPress: () => onDelete(file) },
     ]);
   };
