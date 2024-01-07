@@ -3,19 +3,27 @@ import {
   FlatList,
   Image,
   SafeAreaView,
+  type StyleProp,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  type ViewStyle,
 } from "react-native";
 import useBucket, { type FileWithURL } from "../../utils/hooks/bucket";
-import Logout from "../Logout";
 import { deleteImage } from "../../utils/functions/storage";
 import Loader from "../../components/Loader";
 import { downloadPicture } from "../../utils/functions/fileSystem";
+import useArrayState from "../../utils/hooks/arrayState";
+import Footer from "./Footer";
+import PictureItem from "./PictureItem";
 
 const Pictures = () => {
   const { files, loading, fetchImages } = useBucket();
+
+  const [selectedPictures, { addItem, removeItem }] =
+    useArrayState<FileWithURL>([]);
+  const selectionMode = !!selectedPictures.length;
 
   const onDelete = async (file: FileWithURL) => {
     await deleteImage(file);
@@ -24,10 +32,24 @@ const Pictures = () => {
 
   const openPictureMenu = (file: FileWithURL) => {
     Alert.alert(file.name, "¿Qué quieres hacer con esta foto?", [
-      { text: 'Cancelar', onPress: () => null },
+      { text: "Cancelar", onPress: () => null },
       { text: "Descargar", onPress: () => downloadPicture(file) },
       { text: "Borrar", onPress: () => onDelete(file) },
     ]);
+  };
+
+  const togglePicture = (item: FileWithURL, index: number) => {
+    if (index >= 0) {
+      removeItem(index);
+    } else {
+      addItem(item);
+    }
+  };
+
+  const onPress = (item: FileWithURL, index: number) => {
+    if (selectionMode) {
+      togglePicture(item, index);
+    }
   };
 
   return (
@@ -41,25 +63,31 @@ const Pictures = () => {
           <FlatList
             data={files}
             renderItem={({ item }) => {
-              const { name, url } = item;
+              const { id } = item;
+
+              const selectedIndex = selectedPictures.findIndex(
+                (s) => s.id === id
+              );
+              const isSelected = selectedIndex >= 0;
+
+              const onLongPress = isSelected
+                ? () => removeItem(selectedIndex)
+                : () => addItem(item);
 
               return (
-                <TouchableOpacity
-                  style={styles.pictureContainer}
-                  onLongPress={() => openPictureMenu(item)}
-                >
-                  <Text>{name}</Text>
-                  <Image source={{ uri: url }} style={styles.image} />
-                </TouchableOpacity>
+                <PictureItem
+                  item={item}
+                  onPress={() => onPress(item, selectedIndex)}
+                  onLongPress={onLongPress}
+                  isSelected={isSelected}
+                />
               );
             }}
             keyExtractor={(item) => item.id}
           />
         </View>
 
-        <View style={styles.logoutContainer}>
-          <Logout />
-        </View>
+        <Footer selectedItems={selectedPictures} />
       </SafeAreaView>
     </Loader>
   );
@@ -81,10 +109,6 @@ const styles = StyleSheet.create({
   picturesContainer: {
     paddingVertical: 10,
     flex: 1,
-  },
-  logoutContainer: {
-    justifyContent: "center",
-    alignItems: "center",
   },
   pictureContainer: {
     marginVertical: 10,
