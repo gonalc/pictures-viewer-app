@@ -8,6 +8,7 @@ import {
   type StyleProp,
   type ViewStyle,
 } from "react-native";
+import { getDate, getTime } from "../../utils/functions/dates";
 
 export interface PictureItemProps {
   item: FileWithURL;
@@ -22,7 +23,10 @@ const PictureItem: FC<PictureItemProps> = ({
   onLongPress,
   onPress,
 }) => {
-  const { name, url } = item;
+  const { url, created_at } = item;
+
+  const date = getDate(created_at)
+  const time = getTime(created_at)
 
   const itemStyles: StyleProp<ViewStyle>[] = [styles.pictureContainer];
 
@@ -36,7 +40,7 @@ const PictureItem: FC<PictureItemProps> = ({
       onLongPress={onLongPress}
       onPress={onPress}
     >
-      <Text>{name}</Text>
+      <Text>{`${date} - ${time}`}</Text>
       <Image source={{ uri: url }} style={styles.image} />
     </TouchableOpacity>
   );
