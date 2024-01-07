@@ -25,13 +25,13 @@ const PictureItem: FC<PictureItemProps> = ({
 }) => {
   const { url, created_at } = item;
 
-  const date = getDate(created_at)
-  const time = getTime(created_at)
+  const date = getDate(created_at);
+  const time = getTime(created_at);
 
   const itemStyles: StyleProp<ViewStyle>[] = [styles.pictureContainer];
 
   if (isSelected) {
-    itemStyles.push({ backgroundColor: "red" });
+    itemStyles.push(styles.selected);
   }
 
   return (
@@ -40,7 +40,7 @@ const PictureItem: FC<PictureItemProps> = ({
       onLongPress={onLongPress}
       onPress={onPress}
     >
-      <Text>{`${date} - ${time}`}</Text>
+      <Text style={styles.name}>{`${date} - ${time}`}</Text>
       <Image source={{ uri: url }} style={styles.image} />
     </TouchableOpacity>
   );
@@ -49,11 +49,20 @@ const PictureItem: FC<PictureItemProps> = ({
 const styles = StyleSheet.create({
   pictureContainer: {
     marginVertical: 10,
+    alignSelf: "center",
+    borderRadius: 5,
+  },
+  name: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   image: {
     height: 200,
     width: 350,
     borderRadius: 5,
+  },
+  selected: {
+    backgroundColor: "lightgreen",
   },
 });
 
