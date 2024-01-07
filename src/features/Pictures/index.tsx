@@ -1,14 +1,10 @@
 import {
   Alert,
   FlatList,
-  Image,
   SafeAreaView,
-  type StyleProp,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
-  type ViewStyle,
 } from "react-native";
 import useBucket, { type FileWithURL } from "../../utils/hooks/bucket";
 import { deleteImage } from "../../utils/functions/storage";

@@ -1,6 +1,13 @@
-import { FC } from "react";
+import type { FC } from "react";
 import type { FileWithURL } from "../../utils/hooks/bucket";
-import { Image, StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  type StyleProp,
+  type ViewStyle,
+} from "react-native";
 
 export interface PictureItemProps {
   item: FileWithURL;
@@ -9,7 +16,12 @@ export interface PictureItemProps {
   isSelected: boolean;
 }
 
-const PictureItem: FC<PictureItemProps> = ({ item, isSelected, onLongPress, onPress }) => {
+const PictureItem: FC<PictureItemProps> = ({
+  item,
+  isSelected,
+  onLongPress,
+  onPress,
+}) => {
   const { name, url } = item;
 
   const itemStyles: StyleProp<ViewStyle>[] = [styles.pictureContainer];
