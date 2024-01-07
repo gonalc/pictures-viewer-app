@@ -28,10 +28,9 @@ const Pictures = () => {
   };
 
   const openPictureMenu = (file: FileWithURL) => {
-    Alert.alert(file.name, "¿Qué quieres hacer con esta foto?", [
+    Alert.alert(file.name, "¿Quieres descargar esta foto?", [
       { text: "Cancelar", onPress: () => null },
       { text: "Descargar", onPress: () => downloadPicture(file) },
-      { text: "Borrar", onPress: onDelete },
     ]);
   };
 
@@ -46,6 +45,8 @@ const Pictures = () => {
   const onPress = (item: FileWithURL, index: number) => {
     if (selectionMode) {
       togglePicture(item, index);
+    } else {
+      openPictureMenu(item)
     }
   };
 
