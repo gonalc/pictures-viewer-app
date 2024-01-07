@@ -27,10 +27,15 @@ const useArrayState = <T>(initialValue: T[] = []) => {
         })
     }
 
+    const reset = () => {
+        setValue([])
+    }
+
     return [value, {
         addItem,
         removeItem,
-        updateItem
+        updateItem,
+        reset
     }] as const
 }
 

@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import useBucket, { type FileWithURL } from "../../utils/hooks/bucket";
-import { deleteImage } from "../../utils/functions/storage";
+import { deleteImages } from "../../utils/functions/storage";
 import Loader from "../../components/Loader";
 import { downloadPicture } from "../../utils/functions/fileSystem";
 import useArrayState from "../../utils/hooks/arrayState";
@@ -17,20 +17,21 @@ import PictureItem from "./PictureItem";
 const Pictures = () => {
   const { files, loading, fetchImages } = useBucket();
 
-  const [selectedPictures, { addItem, removeItem }] =
+  const [selectedPictures, { addItem, removeItem, reset }] =
     useArrayState<FileWithURL>([]);
   const selectionMode = !!selectedPictures.length;
 
-  const onDelete = async (file: FileWithURL) => {
-    await deleteImage(file);
+  const onDelete = async () => {
+    await deleteImages(selectedPictures);
     await fetchImages();
+    reset();
   };
 
   const openPictureMenu = (file: FileWithURL) => {
     Alert.alert(file.name, "¿Qué quieres hacer con esta foto?", [
       { text: "Cancelar", onPress: () => null },
       { text: "Descargar", onPress: () => downloadPicture(file) },
-      { text: "Borrar", onPress: () => onDelete(file) },
+      { text: "Borrar", onPress: onDelete },
     ]);
   };
 
@@ -52,7 +53,7 @@ const Pictures = () => {
     <Loader isLoading={loading}>
       <SafeAreaView style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Fotillos</Text>
+          <Text style={styles.title}>Fotillos ({files?.length})</Text>
         </View>
 
         <View style={styles.picturesContainer}>
@@ -83,7 +84,7 @@ const Pictures = () => {
           />
         </View>
 
-        <Footer selectedItems={selectedPictures} />
+        <Footer selectedItems={selectedPictures} deletePictures={onDelete} />
       </SafeAreaView>
     </Loader>
   );

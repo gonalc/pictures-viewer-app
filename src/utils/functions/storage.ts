@@ -16,13 +16,13 @@ export async function getImages(bucketName: BucketName = "pictures") {
   return data;
 }
 
-export async function deleteImage(
-  file: FileWithURL,
+export async function deleteImages(
+  files: FileWithURL[],
   bucketName: BucketName = "pictures"
 ) {
   const { data, error } = await supabase.storage
     .from(bucketName)
-    .remove([file.name]);
+    .remove(files.map(file => file.name));
 
   if (error) {
     console.log("There has been an error removing this file: ", error);
